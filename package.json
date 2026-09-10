@@ -1,0 +1,14 @@
+{
+  "name": "pairlab-task-board",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal PairLab task board vertical slice",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
