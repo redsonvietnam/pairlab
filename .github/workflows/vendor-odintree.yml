@@ -1,0 +1,45 @@
+name: Vendor OdinTree
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PairLab
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Vendor OdinTree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf vendor/odintree
+          git clone --depth=1 https://github.com/Thanas-R/OdinTree.git vendor/odintree
+          rm -rf vendor/odintree/.git
+
+          cat > vendor/odintree/PAIRLAB-VENDOR.md <<'EOF'
+          # OdinTree vendored into PAIRLAB
+
+          Upstream: https://github.com/Thanas-R/OdinTree
+          Source purpose: interactive GitHub repository explorer and visual knowledge graph.
+          License: MIT (see LICENSE).
+
+          This directory is an experimental vendor snapshot. Do not treat upstream architecture,
+          UI, or AI behavior as canonical PAIRFLOW design.
+
+          PAIRLAB may use this code as a visualization/reference substrate while keeping
+          PAIRFLOW/PCM governance separate.
+          EOF
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add vendor/odintree
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: vendor OdinTree snapshot"
+          git push origin HEAD
