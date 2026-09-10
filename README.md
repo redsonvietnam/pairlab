@@ -1,6 +1,6 @@
 # PairLab Task Board
 
-A minimal single-user task board built as the PAIRLAB TASK-001 vertical slice.
+A minimal single-user task board built as the PAIRLAB vertical slice.
 
 ## Stack
 
@@ -54,7 +54,7 @@ The default persistent data file is `data/tasks.json`. Set `DATA_FILE` to use an
 npm test
 ```
 
-The integration tests exercise `GET /api/tasks`, `POST /api/tasks`, validation, and persistence across a server process restart.
+The integration tests exercise the real HTTP API for task creation, listing, updates, deletion, validation, and persistence across a server process restart.
 
 ## API
 
@@ -81,6 +81,32 @@ Response:
 }
 ```
 
+The title must be a non-empty string after trimming whitespace.
+
+### `PATCH /api/tasks/:id`
+
+Updates one or both supported fields: `title` and `completed`.
+
+Examples:
+
+```json
+{"completed":true}
+```
+
+```json
+{"title":"Updated task","completed":false}
+```
+
+If `title` is supplied, it must be a non-empty string after trimming whitespace. If `completed` is supplied, it must be a boolean. An empty patch is rejected with HTTP 400. A missing task returns HTTP 404.
+
+### `DELETE /api/tasks/:id`
+
+Deletes the task and returns the deleted task. A missing task returns HTTP 404.
+
+## Persistence
+
+The JSON file remains the persistence layer for TASK-002. POST, PATCH, and DELETE all rewrite the file using a temporary file followed by rename. Integration tests stop the server, restart it with the same `DATA_FILE`, and verify the resulting task list is preserved.
+
 ## Scope
 
-TASK-001 intentionally excludes authentication, multi-user support, realtime updates, advanced UI, deployment infrastructure, AI features, PAIRFLOW/PCM changes, and other non-essential product features.
+TASK-002 intentionally excludes authentication, multi-user support, database migration, SQLite, realtime updates, search/filtering, pagination, Docker, deployment infrastructure, framework migration, UI redesign, AI features, and PAIRFLOW/PCM changes.
