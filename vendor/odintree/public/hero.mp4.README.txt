@@ -1,0 +1,14 @@
+Drop a video file named hero-placeholder.mp4 into the public/ folder of this project to display it on the homepage.
+
+How to use:
+1. Find your video file (mp4 recommended for broad browser support).
+2. Rename it to hero-placeholder.mp4
+3. Place it inside this folder (the public/ directory of the project).
+4. The homepage video player will load it automatically at the URL "/hero-placeholder.mp4".
+
+Optional:
+- A poster frame: place hero-poster.jpg in this same folder if you want a still image before the video plays.
+
+Notes:
+- File should be reasonably small (ideally under 10MB) for fast page load.
+- Recommended resolution: 1920x1080 or smaller, H.264 encoded.
