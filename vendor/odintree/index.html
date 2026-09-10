@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OdinTree</title>
+    <meta name="description" content="Interactive GitHub repository visualization and learning platform. Explore code visually with AI powered insights.">
+    
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="OdinTree">
+  <meta name="twitter:title" content="OdinTree">
+  <meta property="og:description" content="Interactive GitHub repository visualization and learning platform. Explore code visually with AI powered insights.">
+  <meta name="twitter:description" content="Interactive GitHub repository visualization and learning platform. Explore code visually with AI powered insights.">
+  <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="/public/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
+<link rel="shortcut icon" href="/public/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/public/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="Odin" />
+<link rel="manifest" href="/public/site.webmanifest" />
+</head>
+  <body>
+    <script>
+      // Light mode is the default; only restore dark if user explicitly chose it.
+      try {
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+        else document.documentElement.classList.remove('dark');
+      } catch (e) {}
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
