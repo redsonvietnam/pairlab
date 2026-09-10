@@ -1,0 +1,9 @@
+body { font-family: system-ui, sans-serif; margin: 0; background: #f5f5f5; color: #222; }
+main { max-width: 900px; margin: 0 auto; padding: 24px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+button { padding: 10px 14px; cursor: pointer; }
+#status { color: #555; }
+#graph { min-height: 300px; display: flex; align-items: flex-start; gap: 16px; padding: 24px; border: 1px solid #ccc; background: white; overflow-x: auto; }
+.node { min-width: 150px; padding: 16px; border: 1px solid #888; border-radius: 8px; background: #fafafa; }
+.node strong, .node small { display: block; }
+.node small { margin-top: 6px; color: #666; }
