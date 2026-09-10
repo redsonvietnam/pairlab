@@ -48,6 +48,26 @@ async function readJson(request) {
   }
 }
 
+function validatePatch(body) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) {
+    return 'request body must be an object';
+  }
+
+  const hasTitle = Object.hasOwn(body, 'title');
+  const hasCompleted = Object.hasOwn(body, 'completed');
+  if (!hasTitle && !hasCompleted) return 'title or completed is required';
+
+  if (hasTitle && (typeof body.title !== 'string' || !body.title.trim())) {
+    return 'title must be a non-empty string';
+  }
+
+  if (hasCompleted && typeof body.completed !== 'boolean') {
+    return 'completed must be a boolean';
+  }
+
+  return null;
+}
+
 async function serveStatic(request, response, pathname) {
   const requested = pathname === '/' ? '/index.html' : pathname;
   const filePath = path.normalize(path.join(publicDir, requested));
@@ -74,6 +94,7 @@ async function serveStatic(request, response, pathname) {
 const server = http.createServer(async (request, response) => {
   try {
     const url = new URL(request.url, `http://${request.headers.host || 'localhost'}`);
+    const taskMatch = url.pathname.match(/^\/api\/tasks\/([^/]+)$/);
 
     if (url.pathname === '/api/tasks' && request.method === 'GET') {
       sendJson(response, 200, await readTasks());
@@ -98,6 +119,46 @@ const server = http.createServer(async (request, response) => {
       tasks.push(task);
       await writeTasks(tasks);
       sendJson(response, 201, task);
+      return;
+    }
+
+    if (taskMatch && request.method === 'PATCH') {
+      const taskId = decodeURIComponent(taskMatch[1]);
+      const body = await readJson(request);
+      const validationError = validatePatch(body);
+      if (validationError) {
+        sendJson(response, 400, { error: validationError });
+        return;
+      }
+
+      const tasks = await readTasks();
+      const index = tasks.findIndex((task) => task.id === taskId);
+      if (index === -1) {
+        sendJson(response, 404, { error: 'Task not found' });
+        return;
+      }
+
+      const updatedTask = { ...tasks[index] };
+      if (Object.hasOwn(body, 'title')) updatedTask.title = body.title.trim();
+      if (Object.hasOwn(body, 'completed')) updatedTask.completed = body.completed;
+      tasks[index] = updatedTask;
+      await writeTasks(tasks);
+      sendJson(response, 200, updatedTask);
+      return;
+    }
+
+    if (taskMatch && request.method === 'DELETE') {
+      const taskId = decodeURIComponent(taskMatch[1]);
+      const tasks = await readTasks();
+      const index = tasks.findIndex((task) => task.id === taskId);
+      if (index === -1) {
+        sendJson(response, 404, { error: 'Task not found' });
+        return;
+      }
+
+      const [deletedTask] = tasks.splice(index, 1);
+      await writeTasks(tasks);
+      sendJson(response, 200, deletedTask);
       return;
     }
 
