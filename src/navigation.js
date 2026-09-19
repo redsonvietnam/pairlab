@@ -19,6 +19,15 @@ export function createNavigationState({ project, focus, resolution = 'R2', view 
   };
 }
 
+export function resolveNode(graphState, nodeId) {
+  if (!graphState || !Array.isArray(graphState.nodes)) {
+    throw new Error('Graph state with nodes is required');
+  }
+  const node = graphState.nodes.find((candidate) => candidate.id === nodeId);
+  if (!node) throw new Error(`Node not found: ${nodeId}`);
+  return clone(node);
+}
+
 export function focus(state, node) {
   if (!node) throw new Error('focus node is required');
   if (node === state.focus) return clone(state);
@@ -27,6 +36,11 @@ export function focus(state, node) {
     focus: node,
     history: [...state.history, { focus: state.focus, resolution: state.resolution, view: state.view }]
   };
+}
+
+export function focusNode(state, graphState, nodeId) {
+  resolveNode(graphState, nodeId);
+  return focus(state, nodeId);
 }
 
 export function zoomIn(state) {
